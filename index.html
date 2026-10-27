@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Scanner Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #d9dadc;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .card h2 {
+            margin: 10px 0 0;
+            font-size: 28px;
+        }
+
+        .table-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .table-box h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #111827;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .positive {
+            color: green;
+            font-weight: bold;
+        }
+
+        .scan-button {
+            margin-top: 25px;
+            padding: 12px 22px;
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .scan-button:hover {
+            background: #556073;
+        }
+
+        @media (max-width: 700px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        .news{
+            max-width: 300px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>📈 Stock Scanner</h1>
+        <p>Low-price stock market scanner</p>
+    </div>
+
+    <div class="container">
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>PRICE RANGE</h3>
+                <h2>$2 - $10</h2>
+            </div>
+
+            <div class="card">
+                <h3>STOCKS FOUND</h3>
+                <h2>{{ stocks|length }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>TOP GAINER</h3>
+
+                {% if stocks %}
+                <h2>{{ stocks[0].symbol }} (+{{ "%.2f"|format(stocks[0].change) }}%)</h2>
+                {% else %}
+                <h2>-</h2>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="table-box">
+
+            <h2>Top Stocks</h2>
+
+            <table>
+
+                <tr>
+                    <th>Rank</th>
+                    <th>Symbol</th>
+                    <th>Price</th>
+                    <th>% Change</th>
+                    <th>Float</th>
+                    <th>Country</th>
+                    <th>News</th>
+                </tr>
+
+                {% for stock in stocks %}
+
+                <tr>
+                    <td>{{ loop.index }}</td>
+
+                    <td>
+                        <strong>{{ stock.symbol }}</strong>
+                    </td>
+
+                    <td>
+                        ${{ "%.2f"|format(stock.price) }}
+                    </td>
+
+                    <td class="positive">
+                        +{{ "%.2f"|format(stock.change) }}%
+                    </td>
+                    <td>{{ "%.2f"|format(stock.float/1000000) }}M</td>
+                    <td>{{ stock.country }}</td>
+                    <td class="news">{{ stock.news }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+            <button class="scan-button" onclick="location.reload()">
+                🔄 Scan Again
+            </button>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
